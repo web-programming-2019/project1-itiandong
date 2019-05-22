@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    结果
+{% endblock %}
+
+{% block body %}
+    <h1>{{title}}</h1>
+
+    {{ message }}
+
+    {%  for link in links  %}
+        <a href="{{ url_for(link[1]) }}">{{ link[0] }}</a>
+    {% endfor %}
+{% endblock %}

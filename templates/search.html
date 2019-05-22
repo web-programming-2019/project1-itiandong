@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    搜索
+{% endblock %}
+
+{% block body %}
+    <h1>搜索图书</h1>
+    <form action="{{url_for('search')}}" method="POST">
+      <div class="form-group mb-2">
+        <input name="year" type="text" class="form-control-plaintext" value="">
+      </div>
+      <button type="submit" class="btn btn-primary mb-2">搜索</button>
+      <a href="/">回到首页</a>
+    </form>
+{% endblock %}
