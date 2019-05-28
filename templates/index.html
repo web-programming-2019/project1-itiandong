@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="hello">
+    <center>
+    {% for button in buttons %}
+        {% if button[2] %}
+            <a role="button" class="btn btn-primary" href="{{ url_for(button[0]) }}">{{ button[1] }}</a>
+        {% else %}
+            <a role="button" class="btn btn-secondary" href="{{ url_for(button[0]) }}">{{ button[1] }}</a>
+        {% endif %}
+    {% endfor %}
+    </center>
+    </div>
+{% endblock %}
