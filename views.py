@@ -3,6 +3,7 @@ from models import User, Book, Review
 
 from flask import flash, redirect, url_for, render_template, session, jsonify
 from forms import LoginForm, RegisterForm, SearchForm, ReviewForm
+from hashlib import md5
 
 @app.route('/')
 def index():
@@ -25,9 +26,12 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
+        hl = md5()
         name = form.username.data
         pwd = form.password.data
-        ret = User.query.filter_by(username=name, password=pwd).first()
+        hl.update(pwd.encode(encoding="UTF-8"))
+        hash = hl.hexdigest()
+        ret = User.query.filter_by(username=name, password=hash).first()
         if ret is not None:
             session["uid"] = ret.id
             session["uname"] = ret.username
@@ -49,11 +53,14 @@ def register():
     if form.validate_on_submit():
         name = form.username.data
         pwd = form.password.data
+        hl = md5()
+        hl.update(pwd.encode(encoding="UTF-8"))
+        hash = hl.hexdigest()
         ret = User.query.filter_by(username=name).first()
         if ret is not None:
             flash('该用户名已经存在')
             return redirect(url_for('login'))
-        user = User(username=name, password=pwd)
+        user = User(username=name, password=hash)
         db.session.add(user)
         db.session.commit()
         flash(f'你好{name}，您已经成功注册！')
@@ -63,8 +70,8 @@ def register():
 
 @app.route('/logout')
 def logout():
-    if session.pop("uid", None) is None:
-        flash("没有登陆，注销失败！")
+    session.clear()
+    flash('已清除登录信息!')
     return redirect(url_for('index'))
 
 
